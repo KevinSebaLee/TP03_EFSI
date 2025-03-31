@@ -1,53 +1,60 @@
 const listasVer = document.getElementById('listasVer');
 const ingresoLista = document.getElementById('ingresoLista');
 const lista = document.getElementById('lista');
-const botonBorrar = document.getElementById('eliminarLista')
+const botonBorrar = document.getElementById('eliminarLista');
 
-let listas = [];
+let listas = JSON.parse(localStorage.getItem('listas')) || [];
 
-listasVer.addEventListener('submit', (event) => {
-    event.preventDefault();
+const saveToLocalStorage = () => localStorage.setItem('listas', JSON.stringify(listas));
 
-    const listaIngresar = ingresoLista.value.trim();
-
-    if (listaIngresar !== '') {
-        listas.push(listaIngresar);
-
+const renderList = () => {
+    lista.innerHTML = '';
+    listas.forEach((item, index) => {
         const li = document.createElement('li');
         const checkbox = document.createElement('input');
         const span = document.createElement('span');
         const eliminar = document.createElement('button');
 
         checkbox.type = 'checkbox';
-        eliminar.style.display = "none"
-        eliminar.innerHTML = "Borrar"
+        checkbox.checked = item.completed;
+        eliminar.style.display = item.completed ? 'inline' : 'none';
+        eliminar.textContent = 'Borrar';
 
-        span.textContent = listaIngresar;
+        span.textContent = item.text;
 
         checkbox.addEventListener('change', () => {
+            item.completed = checkbox.checked;
             eliminar.style.display = checkbox.checked ? 'inline' : 'none';
+            saveToLocalStorage();
         });
 
-        botonBorrar.addEventListener('click', () => {
-            const checkbox = li.querySelector('input[type="checkbox"]'); 
-            if (checkbox && checkbox.checked) { 
-                console.log(li.innerHTML);
-                lista.removeChild(li);
-            }
-        });    
-
         eliminar.addEventListener('click', () => {
-            lista.removeChild(li)
-        })
+            listas.splice(index, 1);
+            saveToLocalStorage();
+            renderList();
+        });
 
-        li.appendChild(checkbox);
-        li.appendChild(span);
-        li.appendChild(eliminar)
-
+        li.append(checkbox, span, eliminar);
         lista.appendChild(li);
+    });
+};
 
-        ingresoLista.value = '';
-    }
+listasVer.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const listaIngresar = ingresoLista.value.trim();
+    
+    if (!listaIngresar) return;
+
+    listas.push({ text: listaIngresar, completed: false });
+    saveToLocalStorage();
+    renderList();
+    ingresoLista.value = '';
 });
 
+botonBorrar.addEventListener('click', () => {
+    listas = listas.filter(item => !item.completed);
+    saveToLocalStorage();
+    renderList();
+});
 
+renderList();
