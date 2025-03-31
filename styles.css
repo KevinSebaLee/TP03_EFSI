@@ -9,3 +9,15 @@ input:checked + span{
 input:checked + button{
     display: block;
 }
+
+form:has(input[value="Pendientes"]:checked) #lista li:has(input[type="checkbox"]:checked) {
+    display: none;
+}
+
+form:has(input[value="Completadas"]:checked) #lista li:not(:has(input[type="checkbox"]:checked)) {
+    display: none;
+}
+
+form:has(input[value="Todas"]:checked) #lista li {
+    display: flex;
+}

@@ -10,7 +10,15 @@
     <form id="listasVer">
         <input id="ingresoLista" type="text">
         <button type="submit" id="agregarLista">Enviar</button>
+        <button type="submit" id="eliminarLista">Eliminar todos los puntos de la lista</button>
         
+        <input type="radio" name="filter" value="Todas" checked>
+        <label>Todas</label>
+        <input type="radio" name="filter" value="Completadas">
+        <label>Completadas</label>
+        <input type="radio" name="filter" value="Pendientes">
+        <label>Pendientes</label>
+
         <ul id="lista">
         </ul>
     </form>

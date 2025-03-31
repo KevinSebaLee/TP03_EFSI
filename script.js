@@ -1,6 +1,7 @@
 const listasVer = document.getElementById('listasVer');
 const ingresoLista = document.getElementById('ingresoLista');
 const lista = document.getElementById('lista');
+const botonBorrar = document.getElementById('eliminarLista')
 
 let listas = [];
 
@@ -19,6 +20,7 @@ listasVer.addEventListener('submit', (event) => {
 
         checkbox.type = 'checkbox';
         eliminar.style.display = "none"
+        eliminar.innerHTML = "Borrar"
 
         span.textContent = listaIngresar;
 
@@ -26,8 +28,16 @@ listasVer.addEventListener('submit', (event) => {
             eliminar.style.display = checkbox.checked ? 'inline' : 'none';
         });
 
+        botonBorrar.addEventListener('click', () => {
+            const checkbox = li.querySelector('input[type="checkbox"]'); 
+            if (checkbox && checkbox.checked) { 
+                console.log(li.innerHTML);
+                lista.removeChild(li);
+            }
+        });    
+
         eliminar.addEventListener('click', () => {
-            listas.pop()
+            lista.removeChild(li)
         })
 
         li.appendChild(checkbox);
